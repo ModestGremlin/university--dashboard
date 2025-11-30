@@ -1,0 +1,1384 @@
+<!-- ================== BLOCK 1: FOUNDATION ================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Financial Flow Dashboard</title>
+
+  <!-- Fonts: Premium Real Estate Look -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Google Charts Loader -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+
+
+<!-- ================== BLOCK 2: GLOBAL THEME (MODERN WHITE + BURGUNDY) ================== -->
+<style>
+  :root {
+    --white: #FAFAF8;
+    --card-white: #FFFFFF;
+
+    --burgundy: #8A1B2E;
+    --burgundy-light: #A54256;
+
+    --gold: #D9C39A;
+
+    --text-dark: #1A1A1A;
+    --text-muted: #6D6D6D;
+
+    --radius: 14px;
+    --shadow-soft: 0 8px 24px rgba(0,0,0,0.06);
+  }
+
+  /* ================== BASE PAGE ================== */
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--white);
+    color: var(--text-dark);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 16px 60px;
+  }
+
+  /* ================== HERO SECTION ================== */
+
+  .hero-logo {
+    width: 120px;
+    height: auto;
+    display: block;
+    margin: 0 auto 18px;
+  }
+
+  .hero-title {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--burgundy);
+    margin-bottom: 6px;
+  }
+
+  .hero-subtitle {
+    text-align: center;
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: 0 auto 30px;
+    line-height: 1.55;
+  }
+
+  /* ================== TAB BAR ================== */
+
+  #tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .tab-button {
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    background: transparent;
+    padding: 8px 22px;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--burgundy);
+    transition: all 0.18s ease;
+  }
+
+  .tab-button:hover {
+    background: var(--burgundy-light);
+    color: #fff;
+    border-color: var(--burgundy-light);
+  }
+
+  .tab-button.active {
+    background: var(--burgundy);
+    color: #fff;
+    border-color: var(--burgundy);
+    box-shadow: 0 6px 16px rgba(138, 27, 46, 0.25);
+  }
+
+  /* ================== TAB CONTENT ================== */
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  /* ================== CARDS ================== */
+
+  .card {
+    background: var(--card-white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 20px 24px 28px;
+    margin-bottom: 24px;
+    border: 1px solid #EFEFEA;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--burgundy);
+    margin-bottom: 4px;
+  }
+
+  .card-subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  /* ================== CHART AREA ================== */
+
+  #sankey-container {
+    width: 100%;
+    height: auto;
+    min-height: 2400px;      /* big vertical canvas for full ecosystem */
+    border-radius: var(--radius);
+    border: 1px solid #E7E7E2;
+    background: #FFFFFF;
+    overflow: visible;       /* let the chart use all available height */
+    margin-bottom: 20px;
+  }
+
+  #sankey {
+    width: 100%;
+    height: 100%;
+    min-height: 2400px;
+  }
+
+  /* ================== SUMMARY BOX ================== */
+
+  #summary-box {
+    background: #FFFCF7;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    border: 1px solid #E7DCC5;
+  }
+
+  #summary-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--burgundy);
+    margin: 0 0 12px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dotted #DDD4C3;
+  }
+
+  .summary-row:last-child {
+    border-bottom: none;
+  }
+
+  .summary-label {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  .summary-value {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--burgundy);
+  }
+
+  /* ================== CONTROL BUTTONS ================== */
+
+  .control-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .control-button {
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--burgundy);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .control-button:hover {
+    background: var(--burgundy-light);
+    color: #fff;
+  }
+
+  .control-button.active {
+    background: var(--burgundy);
+    color: #fff;
+    border-color: var(--burgundy);
+  }
+
+  /* ================== REFERENCES & INDEX ================== */
+
+  #ref-box, #index-box {
+    background: var(--card-white);
+    padding: 26px 24px;
+    border-radius: var(--radius);
+    border: 1px solid #EFEFEA;
+    box-shadow: var(--shadow-soft);
+  }
+
+  #ref-box h2, #index-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--burgundy);
+    margin: 0 0 12px;
+  }
+
+  #ref-box p, #index-box p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-dark);
+  }
+
+  /* ================== RESPONSIVE ================== */
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 26px;
+    }
+
+    #sankey-container,
+    #sankey {
+      min-height: 1400px;   /* still tall, but a bit shorter on mobile */
+    }
+  }
+</style>
+<!-- ================== END BLOCK 2 ================== -->
+
+<!-- ================== BLOCK 3: HERO HEADER + TABS (CLEAN VERSION) ================== -->
+<div class="page-wrapper">
+
+  <!-- Hero Header -->
+  <div class="hero-title">Financial Flow Dashboard</div>
+
+  <div class="hero-subtitle">
+    Comparative analysis of university financial flows (Dalhousie, Saint Mary’s, King’s College)
+    presented in a clean modern analytics style.
+  </div>
+
+  <!-- TAB BAR -->
+  <div id="tabs">
+    <button class="tab-button active" data-tab="chart">Chart</button>
+    <button class="tab-button" data-tab="references">References</button>
+    <button class="tab-button" data-tab="index">Index</button>
+  </div>
+
+  <!-- TAB: CHART -->
+  <div id="tab-chart" class="tab-content active">
+
+    <!-- MAIN SANKEY CARD -->
+    <div class="card">
+      <div class="card-title">University Financial Flow – Sankey View</div>
+      <div class="card-subtitle">
+        This view will show how revenues and transfers move through funds and expenses
+        for Dalhousie, Saint Mary’s, and King’s College.
+      </div>
+
+      <!-- Institution selector -->
+      <div class="control-row">
+        <button class="control-button inst-button active" data-inst="dal">Dalhousie</button>
+        <button class="control-button inst-button" data-inst="smu">Saint Mary’s</button>
+        <button class="control-button inst-button" data-inst="kings">King’s College</button>
+        <button class="control-button inst-button" data-inst="msvu">MSVU</button> 
+        <button class="control-button inst-button" data-inst="unb">UNB</button>
+      </div>
+
+      <!-- Mode controls -->
+      <div class="control-row">
+        <button id="btn-normal" class="control-button active">Normal Mode</button>
+        <button id="btn-heat" class="control-button">Heatmap Mode</button>
+      </div>
+
+      <!-- Chart container (Google Sankey draws inside #sankey) -->
+      <div id="sankey-container">
+        <div id="sankey"></div>
+      </div>
+
+      <!-- Summary box -->
+      <div id="summary-box">
+        <h2>Overview</h2>
+
+        <div class="summary-row">
+          <div class="summary-label">Primary Institution</div>
+          <div class="summary-value" id="summary-primary">Dalhousie University</div>
+        </div>
+
+        <div class="summary-row">
+          <div class="summary-label">Total Revenue</div>
+          <div class="summary-value">$0.0M</div>
+        </div>
+
+        <div class="summary-row">
+          <div class="summary-label">Total Expenses</div>
+          <div class="summary-value">$0.0M</div>
+        </div>
+
+        <div class="summary-row">
+          <div class="summary-label">Net Surplus / Deficit</div>
+          <div class="summary-value">TBD</div>
+        </div>
+      </div>
+    </div> <!-- end main card -->
+
+    <!-- ======================== SMU INTERPRETATION BOX (CHART TAB) ======================== -->
+<div id="smu-interpretation" class="card" style="display:none; margin-top:20px;">
+  <div class="card-title">Saint Mary’s University – Interpretation Notes</div>
+  <div class="card-subtitle">
+    Based on the <em>Annual Financial Report for the year ended March 31, 2025</em>.
+  </div>
+
+  <!-- SMU content unchanged -->
+  <p><strong>Scale relative to Dalhousie.</strong> Saint Mary’s operates on a much smaller
+    financial scale. In 2025 it reported roughly <strong>$164.2M in revenues</strong> and
+    <strong>$178.5M in expenses</strong>, compared to Dalhousie’s billion-dollar flows.
+    As a result, a few major flows visually dominate the SMU Sankey.</p>
+
+  <p><strong>Concentration of revenue.</strong> Student Fees contribute
+    <strong>$81.521M</strong>, while Provincial Operating Grants add
+    <strong>$38.188M</strong>. Research and other restricted revenues are much smaller,
+    which is why many left-hand flows appear thin.</p>
+
+  <p><strong>Fund accounting structure.</strong> SMU allocates money through six funds:
+    Operating, Capital, Research, Trust, Specific Purpose, and Endowment. This fund-based
+    structure fragments flows compared with Dalhousie’s unified “all funds” view.</p>
+
+  <p><strong>Dominance of operating salaries.</strong> Operating Fund salaries and benefits
+    total <strong>$101.624M</strong>, more than 70% of operating expenditures.</p>
+
+  <p><strong>Restricted funds appear as thin streams.</strong> Research, Trust, Specific Purpose,
+    and Endowment payouts are small compared with operating salaries.</p>
+
+  <p><strong>Capital activity.</strong> Capital Fund expenditures of
+    <strong>$11.594M</strong> mainly reflect amortization and debt service.</p>
+
+  <p><em>Overall, the shape of the flows reflects each university’s internal fund structure. The diagram is accurately showing those differences</em></p>
+</div>
+<!-- ====================== END SMU INTERPRETATION BOX ====================== -->
+
+
+
+<!-- ======================== KING'S INTERPRETATION BOX (CHART TAB) ======================== -->
+<div id="kings-interpretation-chart" class="card" style="display:none; margin-top:20px;">
+  <div class="card-title">University of King’s College – Interpretation Notes</div>
+  <div class="card-subtitle">
+    Based on the <em>Financial Statements for the Year Ended March 31, 2024</em>.
+  </div>
+
+  <!-- King's content unchanged -->
+  <p>
+  The King’s Sankey reflects a <strong>strict fund-accounting structure</strong>, where Operating,
+  Externally Restricted, Endowment, and Capital Funds remain legally separate (Statement of Financial
+  Position, p. 4). This separation explains why the flows divide into parallel vertical lanes rather
+  than merging into a single unified stream.
+</p>
+
+<p>
+  Relative to its size, King’s depends heavily on <strong>restricted and endowed revenue</strong>. Grants, donor
+  gifts, and USS Conference income often bypass the Operating Fund entirely and flow straight into
+  the Externally Restricted Fund (Statement of Operations by Fund, pp. 6–7). In the Sankey, these appear
+  as the distinctive <strong>diagonal jumps</strong> that skip the operating corridor.
+</p>
+
+<p>
+  Restricted funds then disperse into <strong>many small, targeted initiatives</strong>—scholarships, athletics,
+  equity programming, library enhancements, and advancement activities (Notes, pp. 10–12). These appear
+  as thin branches on the right side of the diagram, reflecting the legally narrow purposes of these
+  revenues.
+</p>
+
+<p>
+  The <strong>Endowment Fund</strong> plays an outsized role despite its modest size: annual payouts of roughly
+  <strong>$0.524M</strong> (Statement of Changes in Net Assets, p. 8) flow almost entirely into scholarships and
+  bursaries, which is why its stream connects directly to student financial aid.
+</p>
+
+<p>
+  The <strong>Capital Fund</strong> is driven mainly by amortization of deferred capital contributions
+  (about <strong>$0.434M</strong>, p. 7), creating a stable but narrow flow. This reflects maintenance of existing
+  infrastructure rather than new expansion.
+</p>
+
+<p>
+  <em>Together, these patterns show a university where restricted and endowed funds quietly carry much of
+  the institutional weight—producing a Sankey that is less a single river and more a set of carefully
+  separated tributaries, each with its own purpose and legal constraints.</em>
+</p>
+
+</div>
+<!-- ====================== END KING'S INTERPRETATION BOX ====================== -->
+
+
+
+<!-- ======================== MSVU INTERPRETATION BOX (CHART TAB) ======================== -->
+<div id="msvu-interpretation" class="card" style="display:none; margin-top:20px;">
+  <div class="card-title">Mount Saint Vincent University – Interpretation Notes</div>
+  <div class="card-subtitle">
+    Based on the <em>Financial Statements for the Year Ended March 31, 2025</em>.
+  </div>
+
+  <p>
+  MSVU’s Sankey reflects the profile of a <strong>small, teaching focused university</strong>—lean,
+  concentrated, and highly sensitive to enrollment swings. (Expected) With total revenues of 
+  <strong>$68.7M</strong> (p. 12), the institution operates at a scale far below SMU or Dalhousie,
+  which naturally produces a tighter, more compact flow structure.
+</p>
+
+<p>
+  <strong>Tuition</strong> is the dominant revenue source, generating <strong>$31.2M</strong> (p. 12).
+  The enrollment declines recorded in 2025—<strong>−9.6% undergraduate</strong> and 
+  <strong>−5.6% international</strong> (pp. 2–3)—translate directly into operating pressure, and the
+  Sankey visualizes this as a heavy left-side reliance on student fees.
+</p>
+
+<p>
+  Within the Operating Fund, flows narrow quickly toward <strong>Salaries & Benefits</strong>, which
+  absorb more than 70% of total expenses (<strong>$50.3M</strong> of $71.4M, p. 12). Again this pattern is
+  not rlly that unusual. It reflects the structural reality of small Maritime universities where fixed staffing
+  costs dominate the budget.
+
+	Also note Deferred Capital Contributions (DCC) — Why does the flow only operate at half? 
+
+Universities often receive large capital grants to build or improve buildings. But accounting rules don’t let them record all that money as revenue at once.
+Instead, they must recognize it slowly over time, as the building is used.
+</p>
+
+<p>
+  Despite these constraints, the diagram also highlights areas of <strong>resilience</strong>. A rise
+  in residence occupancy—from <strong>85% to 95%</strong>—generated roughly <strong>$1.5M</strong> in
+  new revenue (p. 3), and targeted restricted funds continue to support scholarships and specific
+  academic initiatives that would otherwise strain the operating base.
+</p>
+</div>
+<!-- ====================== END MSVU INTERPRETATION BOX ====================== -->
+
+<!-- ====================== UNB INTERPRETATION BOX ====================== -->
+<div id="unb-interpretation" class="institution-interpretation card" style="display:none; margin-top:20px;">
+
+  <h2>Interpreting the UNB Sankey</h2>
+
+  <p>
+    The University of New Brunswick Sankey is based on the <strong>audited consolidated financial
+    statements for the year ended April 30, 2025</strong>. Unlike Saint Mary’s and King’s, which report
+    highly granular line items inside a single operating structure, UNB organizes its finances around
+    four main hubs: the <em>Operating Fund</em>, the <em>Restricted/Research Fund</em>, the
+    <em>Ancillary Fund</em>, and the <em>Capital Fund</em>.
+  </p>
+
+  <p>
+    On the left, broad revenue sources such as government grants, tuition and related fees, ancillary
+    income, investment income, and research grants flow into these funds. The central nodes show how
+    those revenues are routed: operating revenues to the Operating Fund, restricted grants to the
+    Restricted/Research Fund, ancillary revenues to the Ancillary Fund, and deferred capital
+    contributions to the Capital Fund.
+  </p>
+
+  <p>
+    On the right, the flows represent UNB’s major functional expenses: instruction and
+    non-sponsored research, research activity funded through restricted grants, administration and
+    general operations, plant operations, student services, library, central computing, scholarships
+    and bursaries, ancillary operations, and amortization of capital assets. The relatively small
+    number of large functional categories reflects UNB’s <strong>consolidated, high-level reporting
+    style</strong>.
+  </p>
+
+  <p>
+    Importantly, the <strong>shape</strong> of the UNB diagram (clean, with limited overlap) is a
+    consequence of this reporting structure, not a difference in the visualization code. The same
+    Sankey engine is applied to all institutions; diagrams that appear denser or more tangled (for
+    example, Saint Mary’s or King’s) simply mirror the more fragmented way those universities report
+    their funds and expense categories in their published documents.
+  </p>
+
+</div>
+<!-- ====================== END UNB INTERPRETATION BOX ====================== -->
+
+
+
+  </div> <!-- end tab-chart -->
+
+<!-- TAB: REFERENCES -->
+<div id="tab-references" class="tab-content">
+
+  <div class="card" style="margin-top:20px;">
+    <h2>References</h2>
+
+    <p>The financial flows visualized in this dashboard are drawn exclusively from official, 
+       publicly released financial documents issued by each institution. These documents are the 
+       legally authoritative record of a university’s financial architecture and provide the 
+       audited or approved values for revenues, expenses, and fund allocations.</p>
+
+    <h3>Primary Sources</h3>
+
+    <p>
+      <strong>Dalhousie University.</strong><br>
+      <em>Annual Financial Report 2024–2025.</em> Halifax: Dalhousie University, 2025.<br>
+      <a href="dalhousie-afr-2024-25.pdf" target="_blank">View PDF</a><br>
+      <span class="ref-note">
+        Source for Dalhousie’s consolidated all-funds structure, including operating, research, 
+        ancillary, endowment, and capital flows.
+      </span>
+    </p>
+
+    <p>
+      <strong>Saint Mary’s University.</strong><br>
+      <em>Annual Financial Report for the Year Ended March 31, 2025.</em> Halifax: Saint Mary’s University, 2025.<br>
+      <a href="smu-afr-2025.pdf" target="_blank">View PDF</a><br>
+      <span class="ref-note">
+        Source for SMU’s Operating, Research, Ancillary, Capital, Specific Purpose, and Endowment 
+        fund structure, reflected directly in the Sankey flows.
+      </span>
+    </p>
+
+    <p>
+      <strong>University of King’s College.</strong><br>
+      <em>Financial Statements for the Year Ended March 31, 2024.</em> Halifax: University of King’s College, 2024.<br>
+      <a href="kings-fs-2024.pdf" target="_blank">View PDF</a><br>
+      <span class="ref-note">
+        Source for King’s multi-fund accounting system, including Operating, Restricted, 
+        Endowment, and Capital funds.
+      </span>
+    </p>
+
+    <p>
+      <strong>Mount Saint Vincent University.</strong><br>
+      <em>Financial Statements for the Year Ended March 31, 2025.</em> Halifax: MSVU, 2025.<br>
+      <a href="msvu-fs-2025.pdf" target="_blank">View PDF</a><br>
+      <span class="ref-note">
+        Source for MSVU’s Operating, Restricted Special Purpose, Internally Restricted, 
+        Endowment, and Capital Fund allocations, including internal transfers and amortization flows.
+      </span>
+    </p>
+
+    <p>
+      <strong>University of New Brunswick.</strong><br>
+      <em>2025–2026 Operating Budget.</em> Fredericton & Saint John: UNB, 2025.<br>
+      <a href="unb-operating-budget-2025-26.pdf" target="_blank">View PDF</a><br>
+      <span class="ref-note">
+        Source for UNB’s revenue and expenditure structure. UNB’s operating plan is presented as a 
+        unified operating-fund model, and the Sankey accurately reflects this single-fund architecture.
+      </span>
+    </p>
+
+    <h3>Methodological Notes</h3>
+    <ol>
+      <li>
+        All values shown in the Sankey diagrams are taken directly from audited financial statements 
+        or officially approved operating budgets. Figures are rounded to millions to enhance visual clarity.
+      </li>
+
+      <li>
+        Universities do not use a uniform financial architecture. Dalhousie, SMU, King’s, MSVU, 
+        and UNB each employ different combinations of Operating, Research, Ancillary, Restricted, 
+        Endowment, Capital, and Trust funds. The dashboard reflects each institution’s architecture exactly as published.
+      </li>
+
+      <li>
+        Restricted funds (such as research grants, donor-restricted contributions, endowment income, 
+        or provincial earmarked money) cannot be used for general operations under Public Sector 
+        Accounting Standards (PSAS). They therefore appear as distinct revenue streams in the diagrams.
+      </li>
+
+      <li>
+        Links represent financial flows (revenue → fund → expense), not governance authority, 
+        departmental hierarchy, or policy decisions.
+      </li>
+
+      <li>
+        Differences in the visual “shape” of each Sankey reflect underlying accounting structures,
+        not user error. For example, UNB’s single-fund model produces clean, non-overlapping flows, 
+        while SMU’s multi-fund system naturally generates cross-fund diagonals.
+      </li>
+    </ol>
+
+    <h3>Suggested Citation</h3>
+    <p>
+      “Maritime Universities Financial Flow Dashboard.  
+      Compiled from audited financial statements and approved operating budgets (2024–2025, 2025–2026).”
+    </p>
+  </div>
+
+</div>
+<!-- END TAB: REFERENCES -->
+
+
+  <!-- TAB: INDEX -->
+  <div id="tab-index" class="tab-content">
+    <!-- whatever you already have for the index tab -->
+  </div>
+
+</div>
+
+
+
+<!-- ================== BLOCK 6: SANKEY DATA FRAMEWORK ================== -->
+<script>
+const Institutions = {
+  DAL: "dal",
+  SMU: "smu",
+  KINGS: "kings",
+  MSVU: "msvu",
+  UNB: "unb"
+};
+
+let currentInstitution = Institutions.DAL;
+
+// ============================
+// NODE LIST — DAL
+// ============================
+const dalNodes = [
+  // ---- Revenue Inputs ---- (0–10)
+  "Tuition (Credit)",                    //0
+  "Tuition (Non-Credit & Fees)",         //1
+  "Provincial Operating Grants",         //2
+  "Federal & Provincial Research Grants",//3
+  "Corporate/Foundation Grants",         //4
+  "Ancillary Sales",                     //5
+  "Investment Income",                   //6
+  "General Revenue",                     //7
+  "External Cost Recoveries",            //8
+  "Capital Contributions (DCC)",         //9
+  "Endowment Income",                    //10
+
+  // ---- Fund Hubs ---- (11–14)
+  "Operating Fund",                      //11
+  "Research Fund",                       //12
+  "Ancillary Fund",                      //13
+  "Capital Fund",                        //14
+
+  // ---- Operating Destinations ---- (15–35)
+  "Central Administration",              //15
+  "Student Services",                    //16
+  "Scholarships & Bursaries",            //17
+  "Targeted Scholarships",               //18
+  "Salaries & Benefits",                 //19
+  "Facilities Management",               //20
+  "Engineering",                         //21
+  "Arts & Social Sciences",              //22
+  "Science (Operating)",                 //23
+  "Computer Science",                    //24
+  "Agriculture",                         //25
+  "Architecture & Planning",             //26
+  "Medicine (Operating)",                //27
+  "Law",                                 //28
+  "Management",                          //29
+  "Dentistry",                           //30
+  "Finance/Admin",                       //31
+  "Parking & Security",                  //32
+  "Health",                              //33
+  "IT Services (Operating)",             //34
+  "Utilities",                           //35
+  "Travel",                              //36
+
+  // ---- Research Destinations ---- (37–45)
+  "Salaries (Research)",                 //37
+  "Research Scholarships",               //38
+  "Medicine Research",                   //39
+  "Science Research",                    //40
+  "Grant Management",                    //41
+  "Other Research Units",                //42
+  "IT Support (Research)",               //43
+  "HR (Research)",                       //44
+  "CS Research",                         //45
+
+  // ---- Ancillary Destinations ---- (46–50)
+  "Bookstore",                           //46
+  "Food Services",                       //47
+  "Other Ancillary Ops",                 //48
+  "Residence & Housing",                 //49
+  "Ancillary → Research Support",        //50
+
+  // ---- Capital Destination ---- (51)
+  "Capital Amortization"                 //51
+];
+
+// ============================
+// DAL LINK DATA (REAL FLOWS)
+// ============================
+const dalLinks = [
+  // ---------- Revenue → Operating Fund ----------
+  { source: 0, target: 11, value: 262.432 },  // Tuition Credit
+  { source: 1, target: 11, value: 33.783 },   // Tuition Non-credit
+  { source: 2, target: 11, value: 233.100 },  // Prov Grants (operating)
+  { source: 7, target: 11, value: 20.911 },   // General Revenue to Op Fund
+  { source: 10, target: 11, value: 60.400 },  // Endowment → Scholarships (via Op Fund)
+
+  // ---------- Revenue → Research Fund ----------
+  { source: 3, target: 12, value: 157.317 },  // Research Grants → Research Fund
+  { source: 4, target: 12, value: 44.144 },   // Corp/Foundation Grants → Research
+
+  // ---------- Revenue → Ancillary Fund ----------
+  { source: 5, target: 13, value: 103.800 },  // Ancillary Sales → Ancillary Fund
+  { source: 6, target: 13, value: 18.444 },   // Investment Income allocated to Ancillary
+  { source: 8, target: 13, value: 68.582 },   // External Cost Recoveries → Ancillary
+
+  // ---------- Revenue → Capital Fund ----------
+  { source: 9, target: 14, value: 44.800 },   // DCC → Capital Fund
+
+  // ======================
+  // OPERATING FUND FLOWS
+  // ======================
+  { source: 11, target: 15, value: 34.211 },
+  { source: 11, target: 16, value: 40.102 },
+  { source: 11, target: 17, value: 34.487 },
+  { source: 11, target: 18, value: 75.955 },
+  { source: 11, target: 19, value: 295.877 },
+  { source: 11, target: 20, value: 40.866 },
+  { source: 11, target: 21, value: 56.015 },
+  { source: 11, target: 22, value: 32.742 },
+  { source: 11, target: 23, value: 37.211 },
+  { source: 11, target: 24, value: 14.122 },
+  { source: 11, target: 25, value: 6.921 },
+  { source: 11, target: 26, value: 64.983 },
+  { source: 11, target: 27, value: 91.556 },
+  { source: 11, target: 28, value: 10.978 },
+  { source: 11, target: 29, value: 23.142 },
+  { source: 11, target: 30, value: 14.135 },
+  { source: 11, target: 31, value: 11.488 },
+  { source: 11, target: 32, value: 28.110 },
+  { source: 11, target: 33, value: 43.227 },
+  { source: 11, target: 34, value: 3.522 },
+  { source: 11, target: 35, value: 9.554 },
+  { source: 11, target: 36, value: 17.388 },
+
+  // ======================
+  // RESEARCH FUND FLOWS
+  // ======================
+  { source: 12, target: 37, value: 294.857 },
+  { source: 12, target: 38, value: 30.391 },
+  { source: 12, target: 39, value: 5.100 },
+  { source: 12, target: 40, value: 9.800 },
+  { source: 12, target: 41, value: 2.210 },
+  { source: 12, target: 42, value: 1.310 },
+  { source: 12, target: 43, value: 1.650 },
+  { source: 12, target: 44, value: 0.870 },
+  { source: 12, target: 45, value: 0.612 },
+
+  // ======================
+  // ANCILLARY FUND FLOWS
+  // ======================
+  { source: 13, target: 46, value: 18.444 },
+  { source: 13, target: 47, value: 17.511 },
+  { source: 13, target: 48, value: 14.124 },
+  { source: 13, target: 49, value: 16.679 },
+  { source: 13, target: 50, value: 7.340 },
+
+  // ======================
+  // CAPITAL FUND FLOW
+  // ======================
+  { source: 14, target: 51, value: 98.300 }
+];
+
+// ============================
+// FULL DATASET WRAPPER
+// ============================
+const sankeyDatasets = {
+  [Institutions.DAL]: {
+    name: "Dalhousie University",
+    fiscalYear: "2023–2024 (All Funds)",
+    nodes: dalNodes,
+    links: dalLinks
+  },
+
+  // ====================== SAINT MARY'S UNIVERSITY ======================
+  [Institutions.SMU]: {
+    name: "Saint Mary's University",
+    fiscalYear: "Year ended March 31, 2025",
+    currencyNote: "All amounts in millions of dollars (SMU AFR 2025).",
+    nodes: [
+      // 0–7: Revenue sources
+      "Govt of Canada",                    //0
+      "Govt of Nova Scotia",               //1
+      "Other Grants",                      //2
+      "Student Fees",                      //3
+      "Gifts & Bequests",                  //4
+      "Sales of Services & Products",      //5
+      "Investment Income",                 //6
+      "Miscellaneous Income",              //7
+
+      // 8–13: Funds
+      "Operating Fund",                    //8
+      "Capital Fund",                      //9
+      "Research Fund",                     //10
+      "Trust Fund",                        //11
+      "Specific Purpose Fund",             //12
+      "Endowment Fund",                    //13
+
+      // 14–21: Uses / spending
+      "Operating: Salaries & Benefits",    //14
+      "Operating: Student Financial Aid",  //15
+      "Operating: Other Operating Costs",  //16
+      "Capital & Debt Service",            //17
+      "Research Spending",                 //18
+      "Scholarships & Bursaries",          //19
+      "Specific Purpose Activities",       //20
+      "Endowment Payouts & Fees"           //21
+    ],
+    links: [
+      // -------- REVENUE → FUNDS (values in millions) --------
+      { source: 0, target: 8,  value: 1.991 },
+      { source: 0, target: 10, value: 10.145 },
+      { source: 0, target: 12, value: 1.136 },
+
+      { source: 1, target: 8,  value: 38.188 },
+      { source: 1, target: 10, value: 0.462 },
+      { source: 1, target: 12, value: 0.967 },
+
+      { source: 2, target: 8,  value: 0.087 },
+      { source: 2, target: 10, value: 1.637 },
+      { source: 2, target: 12, value: 0.561 },
+
+      { source: 3, target: 8,  value: 81.521 },
+      { source: 3, target: 12, value: 0.238 },
+
+      { source: 4, target: 8,  value: 0.039 },
+      { source: 4, target: 9,  value: 0.001 },
+      { source: 4, target: 11, value: 2.959 },
+      { source: 4, target: 12, value: 0.315 },
+      { source: 4, target: 13, value: 0.732 },
+
+      { source: 5, target: 8,  value: 18.155 },
+      { source: 5, target: 12, value: 0.448 },
+
+      { source: 6, target: 8,  value: 4.231 },
+      { source: 6, target: 10, value: 0.042 },
+      { source: 6, target: 11, value: 1.610 },
+      { source: 6, target: 12, value: 0.140 },
+      { source: 6, target: 13, value: 7.467 },
+
+      { source: 7, target: 8,  value: 1.088 },
+      { source: 7, target: 10, value: 0.005 },
+      { source: 7, target: 11, value: 1.107 },
+      { source: 7, target: 12, value: 0.550 },
+
+      // -------- FUNDS → USES (spending side) --------
+      { source: 8,  target: 14, value: 101.624 },
+      { source: 8,  target: 15, value: 9.530 },
+      { source: 8,  target: 16, value: 29.345 },
+
+      { source: 9,  target: 17, value: 11.594 },
+
+      { source: 10, target: 18, value: 13.512 },
+
+      { source: 11, target: 19, value: 3.384 },
+
+      { source: 12, target: 20, value: 8.982 },
+
+      { source: 13, target: 21, value: 0.524 }
+    ]
+  },
+
+  // ====================== UNIVERSITY OF KING’S COLLEGE ======================
+  [Institutions.KINGS]: {
+    name: "University of King’s College",
+    fiscalYear: "2023–2024",
+    nodes: [
+      // Revenue Inputs (0–9)
+      "Provincial Grant",          //0
+      "Student Academic Fees",     //1
+      "Student Residence Fees",    //2
+      "Student Ancillary Fees",    //3
+      "Investment Income",         //4
+      "Sale of Goods & Services",  //5
+      "Gifts (Non-Endowment)",     //6
+      "Other Grants",              //7
+      "USS Conference Revenue",    //8
+      "Deferred Capital Contributions (Amort.)", //9
+
+      // Fund Hubs (10–13)
+      "Operating Fund",            //10
+      "Externally Restricted Fund",//11
+      "Endowment Fund",            //12
+      "Capital Fund",              //13
+
+      // Spending Destinations (14–28)
+      "Academic",                  //14
+      "Allotment to Dalhousie",    //15
+      "Residence & Student Services", //16
+      "Facilities",                //17
+      "Administration",            //18
+      "Library",                   //19
+      "Scholarships & Bursaries",  //20
+      "Interest & Charges",        //21
+      "Amortization of Capital Assets", //22
+      "Legal Claims",              //23
+      "Athletics",                 //24
+      "Advancement Office",        //25
+      "Equity Office",             //26
+      "Human Resources",           //27
+      "Registrar & Recruitment"    //28
+    ],
+    links: [
+      // REVENUE → FUNDS
+      { source: 0, target: 10, value: 8.606074 },
+      { source: 1, target: 10, value: 8.926435 },
+      { source: 2, target: 10, value: 2.065636 },
+      { source: 3, target: 10, value: 1.162310 },
+      { source: 4, target: 10, value: 2.093300 },
+      { source: 5, target: 10, value: 0.902700 },
+      { source: 6, target: 10, value: 0.779214 },
+      { source: 7, target: 10, value: 0.059378 },
+
+      { source: 6, target: 11, value: 0.300369 },
+      { source: 7, target: 11, value: 0.335687 },
+      { source: 8, target: 11, value: 0.217987 },
+
+      { source: 6, target: 12, value: 0.198022 },
+      { source: 4, target: 12, value: 0.166113 },
+
+      { source: 9, target: 13, value: 0.434219 },
+
+      // FUND → EXPENSES
+      { source: 10, target: 14, value: 7.794026 },
+      { source: 10, target: 15, value: 3.977064 },
+      { source: 10, target: 16, value: 0.921353 },
+      { source: 10, target: 17, value: 2.498963 },
+      { source: 10, target: 18, value: 0.710595 },
+      { source: 10, target: 19, value: 0.503047 },
+      { source: 10, target: 20, value: 1.607917 },
+      { source: 10, target: 21, value: 0.451845 },
+      { source: 10, target: 28, value: 1.549100 },
+      { source: 10, target: 23, value: 1.405134 },
+
+      { source: 11, target: 14, value: 0.345018 },
+      { source: 11, target: 24, value: 0.013272 },
+      { source: 11, target: 25, value: 0.077815 },
+      { source: 11, target: 26, value: 0.065179 },
+      { source: 11, target: 19, value: 0.015704 },
+      { source: 11, target: 20, value: 0.055864 },
+      { source: 11, target: 16, value: 0.095183 },
+      { source: 11, target: 23, value: 0.050000 },
+
+      { source: 12, target: 20, value: 0.524000 },
+
+      { source: 13, target: 22, value: 1.245726 }
+    ]
+  },
+
+    [Institutions.MSVU]: {
+    name: "Mount Saint Vincent University",
+    fiscalYear: "Year ended March 31, 2025",
+    nodes: [
+      // Revenues
+      "Gov Grants – Operating",            //0
+      "Gov Grants – Restricted",           //1
+      "Student Fees",                      //2
+      "Investment Income",                 //3
+      "Donations & Other",                 //4
+      "Deferred Capital Contributions",    //5
+      "Other Revenue",                     //6
+
+      // Funds
+      "Operating Fund",                    //7
+      "Restricted Special Purpose",        //8
+      "Internally Restricted Special",     //9
+      "Internally Restricted Endowments",  //10
+      "Capital Fund",                      //11
+
+      // Expenses
+      "Salaries & Benefits",               //12
+      "Cost of Sales",                     //13
+      "Operating Expenses",                //14
+      "Repairs & Maintenance",             //15
+      "Utilities",                         //16
+      "Amortization of Capital Assets",    //17
+      "Interest Expense",                  //18
+      "Scholarships & Bursaries",          //19
+      "Capital Expenditures"               //20
+    ],
+    links: [
+      { source: 0, target: 7,  value: 22.192 },
+      { source: 1, target: 7,  value: 3.478 },
+      { source: 2, target: 7,  value: 31.200 },
+      { source: 3, target: 7,  value: 0.118 },
+      { source: 4, target: 7,  value: 1.238 },
+      { source: 5, target: 11, value: 3.227 },
+      { source: 6, target: 7,  value: 0.069 },
+
+      { source: 1, target: 8,  value: 11.377 },
+      { source: 1, target: 9,  value: 1.521 },
+      { source: 1, target: 10, value: 0.148 },
+
+      { source: 5, target: 11, value: 2.063 },
+
+      { source: 7, target: 12, value: 50.308 },
+      { source: 7, target: 13, value: 1.098 },
+      { source: 7, target: 14, value: 8.844 },
+      { source: 7, target: 15, value: 1.484 },
+      { source: 7, target: 16, value: 1.886 },
+      { source: 7, target: 17, value: 4.265 },
+      { source: 7, target: 18, value: 0.718 },
+      { source: 7, target: 19, value: 2.788 },
+
+      { source: 8,  target: 19, value: 11.377 },
+      { source: 9,  target: 19, value: 1.521 },
+      { source: 10, target: 19, value: 0.148 },
+
+      { source: 11, target: 20, value: 3.150 }
+    ]
+  },   // ← IMPORTANT: comma after MSVU block
+
+
+  // ====================== UNIVERSITY OF NEW BRUNSWICK ======================
+  [Institutions.UNB]: {
+    name: "University of New Brunswick",
+    fiscalYear: "Year ended April 30, 2025 (Audited Financial Statements)",
+
+    nodes: [
+      // Revenues (0–7)
+      "Government Grants",                        //0
+      "Tuition & Related Fees",                   //1
+      "Research & Restricted Grants",             //2
+      "Investment Income",                        //3
+      "Ancillary Revenue",                        //4
+      "Services & Other Income",                  //5
+      "Amortization of Deferred Capital Contrib.",//6
+      "Donations",                                //7
+
+      // Funds / Hubs (8–11)
+      "Operating Fund",                           //8
+      "Restricted / Research Fund",               //9
+      "Ancillary Fund",                           //10
+      "Capital Fund",                             //11
+
+      // Expenses (12–24)
+      "Instruction & Non-Sponsored Research",     //12
+      "Research & Restricted Grants & Contracts", //13
+      "Administration & General",                 //14
+      "Plant Operations",                         //15
+      "Scholarships & Bursaries",                 //16
+      "Ancillaries (Expenses)",                   //17
+      "Student Services",                         //18
+      "Library",                                  //19
+      "Central Computing",                        //20
+      "Non-Credit Instruction",                   //21
+      "Other",                                    //22
+      "Employee Future Benefits",                 //23
+      "Amortization of Capital Assets"            //24
+    ],
+
+    links: [
+      // REVENUE → FUNDS (values in millions)
+
+      // Operating revenues
+      { source: 0, target: 8, value: 137.850 },   // Government grants → Operating
+      { source: 1, target: 8, value: 130.154 },   // Tuition & fees → Operating
+      { source: 3, target: 8, value: 30.164 },    // Investment income → Operating
+      { source: 5, target: 8, value: 20.798 },    // Services & other → Operating
+      { source: 7, target: 8, value: 2.031 },     // Donations → Operating
+
+      // Restricted / research revenues
+      { source: 2, target: 9, value: 64.938 },    // Research & restricted grants → Restricted / Research fund
+
+      // Ancillary revenues
+      { source: 4, target: 10, value: 22.779 },   // Ancillary revenue → Ancillary fund
+
+      // Capital revenues
+      { source: 6, target: 11, value: 12.058 },   // DCC amortization → Capital fund
+
+      // FUNDS → EXPENSES
+
+      // Operating fund → core operating expenses
+      { source: 8, target: 12, value: 155.807 },  // Instruction & non-sponsored research
+      { source: 8, target: 14, value: 41.270 },   // Administration & general
+      { source: 8, target: 15, value: 39.021 },   // Plant operations
+      { source: 8, target: 16, value: 21.114 },   // Scholarships & bursaries
+      { source: 8, target: 18, value: 16.584 },   // Student services
+      { source: 8, target: 19, value: 15.124 },   // Library
+      { source: 8, target: 20, value: 9.444 },    // Central computing
+      { source: 8, target: 21, value: 4.018 },    // Non-credit instruction
+      { source: 8, target: 22, value: 3.047 },    // Other
+      { source: 8, target: 23, value: 1.453 },    // Employee future benefits
+
+      // Restricted / research fund → research expenses
+      { source: 9, target: 13, value: 60.737 },   // Research & restricted grants & contracts
+
+      // Ancillary fund → ancillary expenses
+      { source: 10, target: 17, value: 18.635 },  // Ancillaries (residences, food, etc.)
+
+      // Capital fund → amortization expense
+      { source: 11, target: 24, value: 19.009 }   // Amortization of capital assets
+    ]
+  }
+
+};   // ← END OF sankeyDatasets (do not touch this)
+</script>
+<!-- ==================== END BLOCK 6 ==================== -->
+
+
+
+
+<!-- ====================== BLOCK 7: SANKEY RENDERER (TRUE HEATMAP) ====================== -->
+<script>
+  google.charts.load("current", { packages: ["sankey"] });
+  google.charts.setOnLoadCallback(drawCurrentInstitution);
+
+  let heatMode = false;
+
+  function getCurrentDataset() {
+    return sankeyDatasets[currentInstitution];
+  }
+
+  function drawCurrentInstitution() {
+    const dataset = getCurrentDataset();
+    const container = document.getElementById("sankey");
+    if (!container || !dataset) return;
+
+    const data = new google.visualization.DataTable();
+    data.addColumn("string", "From");
+    data.addColumn("string", "To");
+    data.addColumn("number", "Value");
+    data.addColumn({ type: "string", role: "style" }); // color per link
+
+    const labels = dataset.nodes;
+
+    // ------------------------------
+    // TRUE HEATMAP ENGINE
+    // ------------------------------
+
+    // 1. Get all values
+    const values = dataset.links.map(l => l.value || 0);
+    const maxVal = Math.max(...values);
+    const minVal = Math.min(...values);
+
+    // 2. Function to map 0–1 → heatmap color
+    function getHeatColor(v) {
+      const t = v / maxVal;    // normalize: 0–1
+
+      // Continuous scale from pale pink → deep burgundy
+      const r1 = 252, g1 = 227, b1 = 233; // light pink (#FCE3E9)
+      const r2 = 138, g2 = 27,  b2 = 46;  // deep burgundy (#8A1B2E)
+
+      const r = Math.round(r1 + t*(r2 - r1));
+      const g = Math.round(g1 + t*(g2 - g1));
+      const b = Math.round(b1 + t*(b2 - b1));
+
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    // 3. Build rows with dynamic color
+    dataset.links.forEach(link => {
+      const fromLabel = labels[link.source];
+      const toLabel = labels[link.target];
+      const v = link.value || 0;
+
+      const color = heatMode
+        ? getHeatColor(v)   // data-driven color
+        : "#C79A6D";        // normal gold tone
+
+      data.addRow([fromLabel, toLabel, v, color]);
+    });
+
+    // ------------------------------
+    // RENDER OPTIONS
+    // ------------------------------
+    const options = {
+      width: "100%",
+      height: container.clientHeight || 1400,
+
+      sankey: {
+        node: {
+          label: {
+            fontName: "Inter",
+            fontSize: 12,
+            color: "#333"
+          },
+          width: 18,
+          nodePadding: 42
+        },
+
+        link: {
+          colorMode: "source"   // use our per-link colors
+        }
+      },
+
+      tooltip: { textStyle: { fontSize: 14 } },
+      backgroundColor: { fill: "transparent" }
+    };
+
+    const chart = new google.visualization.Sankey(container);
+    chart.draw(data, options);
+
+    window.addEventListener("resize", () => {
+      chart.draw(data, options);
+    });
+  }
+
+  function setInstitution(instKey) {
+    if (!sankeyDatasets[instKey]) return;
+    currentInstitution = instKey;
+    drawCurrentInstitution();
+  }
+</script>
+<!-- ====================== END BLOCK 7 ====================== -->
+
+
+
+<!-- ================== BLOCK 8: INSTITUTION SWITCHING ================== -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const instButtons = document.querySelectorAll(".inst-button");
+    const summaryPrimary = document.getElementById("summary-primary");
+
+    // Interpretation boxes inside the CHART TAB
+    const smuBox   = document.getElementById("smu-interpretation");
+    const kingsBox = document.getElementById("kings-interpretation-chart");
+    const msvuBox  = document.getElementById("msvu-interpretation");
+    const unbBox   = document.getElementById("unb-interpretation");   // ✔ ADDED
+
+    // Map short keys in HTML → Institutions enum
+    const instKeyMap = {
+      dal:   Institutions.DAL,
+      smu:   Institutions.SMU,
+      kings: Institutions.KINGS,
+      msvu:  Institutions.MSVU,
+      unb:   Institutions.UNB           // ✔ ADDED
+    };
+
+    function updateSummaryInstitution() {
+      const dataset = sankeyDatasets[currentInstitution];
+      if (dataset && summaryPrimary) {
+        summaryPrimary.textContent = dataset.name;
+      }
+    }
+
+    // Show/hide interpretation boxes
+    function updateInterpretationBoxes(shortKey) {
+      // Hide all boxes
+      if (smuBox)   smuBox.style.display   = "none";
+      if (kingsBox) kingsBox.style.display = "none";
+      if (msvuBox)  msvuBox.style.display  = "none";
+      if (unbBox)   unbBox.style.display   = "none";   // ✔ ADDED
+
+      // Show selected
+      if (shortKey === "smu"   && smuBox)   smuBox.style.display   = "block";
+      if (shortKey === "kings" && kingsBox) kingsBox.style.display = "block";
+      if (shortKey === "msvu"  && msvuBox)  msvuBox.style.display  = "block";
+      if (shortKey === "unb"   && unbBox)   unbBox.style.display   = "block";   // ✔ ADDED
+    }
+
+    // Button listeners
+    instButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const shortKey = btn.getAttribute("data-inst");
+        const fullKey = instKeyMap[shortKey];
+        if (!fullKey) return;
+
+        // Visual active state
+        instButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Switch dataset + redraw chart
+        setInstitution(fullKey);
+
+        // Update title
+        updateSummaryInstitution();
+
+        // Update interpretation visibility
+        updateInterpretationBoxes(shortKey);
+      });
+    });
+
+    // Initial load
+    updateSummaryInstitution();
+    updateInterpretationBoxes("dal");
+  });
+</script>
+<!-- ================== END BLOCK 8 ================== -->
+
+
+
+<!-- ================== BLOCK 9: HEATMAP MODE TOGGLE ================== -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const normalBtn = document.getElementById("btn-normal");
+    const heatBtn = document.getElementById("btn-heat");
+
+    if (!normalBtn || !heatBtn) return;
+
+    function setMode(isHeat) {
+      // heatMode comes from Block 7 (global)
+      heatMode = isHeat;
+
+      // Update button active styles
+      if (isHeat) {
+        heatBtn.classList.add("active");
+        normalBtn.classList.remove("active");
+      } else {
+        normalBtn.classList.add("active");
+        heatBtn.classList.remove("active");
+      }
+
+      // Redraw chart with new color palette
+      drawCurrentInstitution();
+    }
+
+    normalBtn.addEventListener("click", () => setMode(false));
+    heatBtn.addEventListener("click", () => setMode(true));
+  });
+</script>
+<!-- ================== END BLOCK 9 ================== -->
+
+
+
+<!-- ================== BLOCK 4: TAB SWITCHING ENGINE ================== -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const buttons = document.querySelectorAll(".tab-button");
+    const contents = {
+      chart: document.getElementById("tab-chart"),
+      references: document.getElementById("tab-references"),
+      index: document.getElementById("tab-index")
+    };
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-tab");
+
+        // Update button styles
+        buttons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Update content visibility
+        Object.keys(contents).forEach(key => {
+          contents[key].classList.toggle("active", key === target);
+        });
+      });
+    });
+
+  });
+</script>
+<!-- ================== END BLOCK 4 ================== -->
